@@ -37,72 +37,91 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Weather'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed this button this many time'),
-            const SizedBox(
-              height: 25,
-            ),
-            BlocBuilder<CounterCubitCubit, CounterCubitState>(
-              builder: (context, state) {
-                if(state.counterValue < 0){
-                  return Text(
-                    'BBR, NEGATIVE' + state.counterValue.toString(),
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                  );
-                }
-                else if(state.counterValue %2 ==0) {
-                  return Text(
-                    'YAAAY' + state.counterValue.toString(),
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                  );
-                }
-                else if(state.counterValue == 5){
-                  return Text(
-                    'HMM, NUMBER 5' + state.counterValue.toString(),
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                  );
-                } else
-                  return Text(
-                    state.counterValue.toString(),
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                  );
-              },
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    BlocProvider.of<CounterCubitCubit>(context).decrement();
-                  },
-                  tooltip: 'Decrease',
-                  child: Icon(Icons.remove),
+      body: BlocListener<CounterCubitCubit, CounterCubitState>(
+          listener: (context, state) {
+            if (state.wasIncremented == true) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Yay! A SnackBar!'),
+                  duration: Duration(microseconds: 300),
                 ),
-                FloatingActionButton(
-                  onPressed: () {
-                    BlocProvider.of<CounterCubitCubit>(context).increment();
-                  },
-                  tooltip: 'Increase',
-                  child: const Icon(
-                    Icons.add,
-                    color: Color(0xff8DC63F),
+              );
+          } else if (state.wasIncremented == false) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Decremented!'),
+                      duration: Duration(microseconds: 300),
                   ),
+              );
+            }
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text('You have pushed this button this many time'),
+                const SizedBox(
+                  height: 25,
+                ),
+                BlocBuilder<CounterCubitCubit, CounterCubitState>(
+                  builder: (context, state) {
+                    if (state.counterValue < 0) {
+                      return Text(
+                        'BBR, NEGATIVE' + state.counterValue.toString(),
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      );
+                    }
+                    else if (state.counterValue % 2 == 0) {
+                      return Text(
+                        'YAAAY' + state.counterValue.toString(),
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      );
+                    }
+                    else if (state.counterValue == 5) {
+                      return Text(
+                        'HMM, NUMBER 5' + state.counterValue.toString(),
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      );
+                    } else
+                      return Text(
+                        state.counterValue.toString(),
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      );
+                  },
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        BlocProvider.of<CounterCubitCubit>(context).decrement();
+                      },
+                      tooltip: 'Decrease',
+                      child: Icon(Icons.remove),
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        BlocProvider.of<CounterCubitCubit>(context).increment();
+                      },
+                      tooltip: 'Increase',
+                      child: const Icon(
+                        Icons.add,
+                        color: Color(0xff8DC63F),
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          );
+
+        }),
     );
   }
 }
