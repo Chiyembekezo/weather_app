@@ -75,7 +75,7 @@ class CurrentConditions {
   double solarenergy;
   double uvindex;
   double severerisk;
-  Conditions conditions;
+  Conditions? conditions;
   String? sunrise;
   double? sunriseEpoch;
   String? sunset;
@@ -144,10 +144,10 @@ class CurrentConditions {
     solarenergy: (json["solarenergy"] as num?)?.toDouble() ?? 0.0,
     uvindex: (json["uvindex"] as num?)?.toDouble() ?? 0.0,
     severerisk: (json["severerisk"] as num?)?.toDouble() ?? 0.0,
-    conditions: conditionsValues.map[json["conditions"] as String? ?? 'Clear']!,
-    sunrise: json["sunrise"],
+    conditions: conditionsValues.map[json["conditions"] as String? ?? 'Clear'],
+    sunrise: json["sunrise"] as String?,
     sunriseEpoch: (json["sunriseEpoch"] as num?)?.toDouble() ?? 0.0,
-    sunset: json["sunset"],
+    sunset: json["sunset"] as String?,
     sunsetEpoch: (json["sunsetEpoch"] as num?)?.toDouble() ?? 0.0,
     moonphase: (json["moonphase"] as num?)?.toDouble(),
     tempmax: (json["tempmax"] as num?)?.toDouble(),
@@ -158,6 +158,7 @@ class CurrentConditions {
     description: descriptionValues.map[json["description"] as String? ?? 'Description not available'],
     hours: (json["hours"] as List?)?.map((x) => CurrentConditions.fromJson(x)).toList() ?? [],
   );
+
 
   Map<String, dynamic> toJson() => {
     "datetime": datetime,
