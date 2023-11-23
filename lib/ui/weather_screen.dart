@@ -51,7 +51,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     // Putting it all together to get the date in the format "27th October, 2023".
     // We insert the suffix right after the day number.
-    return formattedDate.replaceFirst(DateFormat('d').format(dateTime), dayNumber.toString() + suffix);
+    return formattedDate.replaceFirst(
+        DateFormat('d').format(dateTime), dayNumber.toString() + suffix);
   }
 
   @override
@@ -61,9 +62,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
     super.dispose();
   }
 
-  Future<String> convertCoordinatesToCityName(double latitude, double longitude) async {
+  Future<String> convertCoordinatesToCityName(
+      double latitude, double longitude) async {
     try {
-      List<Placemark> placeMarks = await placemarkFromCoordinates(latitude, longitude);
+      List<Placemark> placeMarks =
+          await placemarkFromCoordinates(latitude, longitude);
       Placemark place = placeMarks[0];
       print('Locality: ${place.locality}');
       return "${place.locality}";
@@ -76,7 +79,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
   void _fetchWeatherWithLocation() async {
     try {
       Position position = await _determinePosition();
-      String cityName = await convertCoordinatesToCityName(position.latitude, position.longitude);
+      String cityName = await convertCoordinatesToCityName(
+          position.latitude, position.longitude);
       if (cityName.isNotEmpty) {
         setState(() {
           _currentCity = cityName;
@@ -95,13 +99,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           children: [
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 40,
+            ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10,),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,43 +120,64 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   ),
                   Column(
                     children: [
-                      Text('Weather App', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18),),
-                      Text(_currentTime, style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12),),
+                      Text(
+                        'Weather App',
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                      Text(
+                        _currentTime,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400, fontSize: 12),
+                      ),
                     ],
                   ),
                   SvgPicture.asset(AppIcons.mode)
                 ],
               ),
             ),
-        TextField(
-                controller: _cityController,
-                decoration: InputDecoration(
-                  hintText: 'Enter a city', // 'hintText' is used instead of 'labelText' for placeholder text.
-                  filled: true, // Fills the background color of the TextField.
-                  fillColor: const Color(0xffD4E7FB), // Background color of the TextField.
-                  prefixIcon: const Icon(Icons.search), // Prefix icon, the search icon inside the TextField.
-                  suffixIcon: _cityController.text.isNotEmpty // Conditionally display the clear button.
-                      ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _cityController.clear(); // Clears the TextField.
-                    },
-                  )
-                      : null,
-                  border: OutlineInputBorder( // Defines the border of the TextField.
-                    borderRadius: BorderRadius.circular(10.0), // Makes the border rounded.
-                    borderSide: BorderSide.none, // Removes the underline of the TextField border.
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 0), // Adjusts the padding inside the TextField.
+            TextField(
+              controller: _cityController,
+              decoration: InputDecoration(
+                hintText: 'Enter a city',
+                // 'hintText' is used instead of 'labelText' for placeholder text.
+                filled: true,
+                // Fills the background color of the TextField.
+                fillColor: const Color(0xffD4E7FB),
+                // Background color of the TextField.
+                prefixIcon: const Icon(Icons.search),
+                // Prefix icon, the search icon inside the TextField.
+                suffixIcon: _cityController.text
+                        .isNotEmpty // Conditionally display the clear button.
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _cityController.clear(); // Clears the TextField.
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  // Defines the border of the TextField.
+                  borderRadius: BorderRadius.circular(10.0),
+                  // Makes the border rounded.
+                  borderSide: BorderSide
+                      .none, // Removes the underline of the TextField border.
                 ),
-                onChanged: (value) {
-                  setState(() {}); // Call setState to toggle the clear button when typing.
-                },
-                onSubmitted: (value) {
-                  // Your search logic when the user submits the form.
-                },
-              ),const SizedBox(height: 20,),
-            Expanded(child: WeatherView(currentCity: _currentCity),),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 0), // Adjusts the padding inside the TextField.
+              ),
+              onChanged: (value) {
+                setState(
+                    () {}); // Call setState to toggle the clear button when typing.
+              },
+              onSubmitted: (value) {
+                // Your search logic when the user submits the form.
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            WeatherView(currentCity: _currentCity),
           ],
         ),
       ),
@@ -179,7 +208,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
     // When we reach here, permissions are granted and we can continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
@@ -188,7 +218,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
 class WeatherView extends StatelessWidget {
   final String currentCity;
+
   const WeatherView({Key? key, required this.currentCity}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WeatherBloc, WeatherState>(
@@ -199,7 +231,8 @@ class WeatherView extends StatelessWidget {
         } else if (state is WeatherLoadingState) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is WeatherLoadedState) {
-          final currentWeather = state.weatherData.currentConditions; // Assuming this is how you access the current conditions
+          final currentWeather = state.weatherData
+              .currentConditions; // Assuming this is how you access the current conditions
 
           // Convert the Conditions enum to a readable string
           String conditionsString = currentWeather.conditions != null
@@ -214,59 +247,139 @@ class WeatherView extends StatelessWidget {
           bool isNightTime =
               DateTime.now().hour >= 18 || DateTime.now().hour <= 4;
 
-          if ( conditionsString == 'Partially cloudy') {
+          if (conditionsString == 'Partially cloudy') {
             svgImagePath = isNightTime
                 ? 'assets/Weather-Partially-Cloudy-Night.svg'
                 : 'assets/Weather-Partially-Cloudy-Day.svg';
-          } else if ( conditionsString == 'Clear') {
+          } else if (conditionsString == 'Clear') {
             svgImagePath = isNightTime
                 ? 'assets/Weather-Clear-Night.svg'
                 : 'assets/Weather-Clear-Day.svg';
-          } else if ( conditionsString == 'Overcast') {
+          } else if (conditionsString == 'Overcast') {
             svgImagePath = isNightTime
                 ? 'assets/Weather-Cloudy.svg'
                 : 'assets/Weather-Cloudy.svg';
-          } else if ( conditionsString == 'Rain') {
+          } else if (conditionsString == 'Rain') {
             svgImagePath = isNightTime
                 ? 'assets/Weather-Raining-Night.svg'
                 : 'assets/Weather-Raining-Day.svg';
           } else {
             svgImagePath = 'assets/images/Sunny.svg'; // Default image
           }
+          final currentTemp = currentWeather.temp.round().toString();
 
           return Column(
-              children: [
-                CurrentWeatherContainer(
-                  svgScr: svgImagePath,
-                  currentWeather: currentWeather,
-                  conditions: conditionsString,
-                  temperature: '${currentWeather.temp}°C',
-                  wind: '${currentWeather.windspeed} km/h',
-                  visibility: '${currentWeather.visibility} km',
-                  humidity: '${currentWeather.humidity}%',
-                  rain: '${currentWeather.visibility}',
-                  feelsLike: '${currentWeather.feelslike}°C',
-                  description: descriptionString,
-                ),
-                // Refreshable list of hourly or daily forecasts
-                Expanded(
+            children: [
+              CurrentWeatherContainer(
+                svgScr: svgImagePath,
+                currentWeather: currentWeather,
+                conditions: conditionsString,
+                temperature: '$currentTemp°C',
+                wind: '${currentWeather.windspeed} km/h',
+                visibility: '${currentWeather.visibility} km',
+                humidity: '${currentWeather.humidity}%',
+                rain: '${currentWeather.visibility}',
+                feelsLike: '${currentWeather.feelslike}°C',
+                description: currentCity,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              // Refreshable list of hourly or daily forecasts
+              SizedBox(
+                height: 130,
                 child: RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<WeatherBloc>().add(FetchWeather(currentCity));
+                  onRefresh: () async {
+                    context.read<WeatherBloc>().add(FetchWeather(currentCity));
+                  },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.weatherData.days.length,
+                    itemBuilder: (context, index) {
+                      final hour = state.weatherData.days[index];
+
+                      // Parse the datetime string to a DateTime object
+                      final month = DateTime.parse(hour.datetime);
+                      // Format the date as, e.g., 'Nov'
+                      final formattedMonth = DateFormat('MMM').format(month);
+
+                      // Parse the datetime string to a DateTime object
+                      final day = DateTime.parse(hour.datetime);
+                      // Format the date as, e.g., '24'
+                      final formattedDay = DateFormat('d').format(day);
+
+                      final temperature = hour.temp.round().toString();
+
+                      String svgIcon = '';
+
+                      if (conditionsString == 'Partially cloudy') {
+                        svgIcon = 'assets/Weather-Partially-Cloudy-Day.svg';
+                      } else if (conditionsString == 'Clear') {
+                        svgIcon = 'assets/Weather-Clear-Day.svg';
+                      } else if (conditionsString == 'Overcast') {
+                        svgIcon = 'assets/Weather-Cloudy.svg';
+                      } else if (conditionsString == 'Rain') {
+                        svgIcon = 'assets/Weather-Raining-Day.svg';
+                      } else {
+                        svgIcon = 'assets/images/Sunny.svg'; // Default image
+                      }
+                      return Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xff358DD8),
+                              Color(0xff256AA4),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              formattedMonth,
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                // Assuming the temperature is blue
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              formattedDay,
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                // Assuming the temperature is blue
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              '$temperature°C',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                // Assuming the temperature is blue
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SvgPicture.asset(
+                              svgIcon,
+                              width: 35,
+                            )
+                          ],
+                        ),
+                      );
                     },
-                    child: ListView.builder(
-                      itemCount: state.weatherData.days.length,
-                      itemBuilder: (context, index) {
-                        final hour = state.weatherData.days[index];
-                        return ListTile(
-                          title: Text(hour.datetime),
-                          subtitle: Text('${hour.temp}°'),
-                        );
-                      },
-                    ),
-                  )
+                  ),
                 ),
-              ],
+              ),
+            ],
           );
         } else if (state is WeatherErrorState) {
           return Center(child: Text('Error: ${state.message}'));
@@ -290,20 +403,18 @@ class CurrentWeatherContainer extends StatelessWidget {
   String feelsLike;
   String description;
 
-
-  CurrentWeatherContainer({
-    super.key,
-    required this.svgScr,
-    required this.currentWeather,
-    required this.conditions,
-    required this.temperature,
-    required this.humidity,
-    required this.visibility,
-    required this.rain,
-    required this.wind,
-    required this.feelsLike,
-    required this.description
-  });
+  CurrentWeatherContainer(
+      {super.key,
+      required this.svgScr,
+      required this.currentWeather,
+      required this.conditions,
+      required this.temperature,
+      required this.humidity,
+      required this.visibility,
+      required this.rain,
+      required this.wind,
+      required this.feelsLike,
+      required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -311,24 +422,45 @@ class CurrentWeatherContainer extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xff358dd8),
-            Color(0xff0b3e82)
-          ]),
-          borderRadius: BorderRadius.all(Radius.circular(10))
-      ),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff358dd8),
+              Color(0xff0b3e82),
+            ],
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SvgPicture.asset(
-                svgScr, width: 110,),
+                svgScr,
+                width: 110,
+              ),
               Column(
                 children: [
-                  Text(temperature , style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 50, color: const Color(0xffffffff)),),
-                  Text(conditions , style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16, color: const Color(0xffffffff)),),
-                  Text( description, style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: const Color(0xffffffff)),),
+                  Text(
+                    temperature,
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 50,
+                        color: const Color(0xffffffff)),
+                  ),
+                  Text(
+                    conditions,
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: const Color(0xffffffff)),
+                  ),
+                  Text(
+                    description,
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: const Color(0xffffffff)),
+                  ),
                 ],
               ),
             ],
@@ -339,52 +471,119 @@ class CurrentWeatherContainer extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [
-                  Color(0xff358dd8),
-                  Color(0xff0b3e82)
-                ]),
+                gradient: const LinearGradient(
+                    colors: [Color(0xff358dd8), Color(0xff0b3e82)]),
                 border: Border.all(
                   color: Colors.white, // Border color
                   width: 1.0, // Border width
                 ),
-                borderRadius: const BorderRadius.all(Radius.circular(10))
-            ),
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   children: [
-                    SvgPicture.asset(AppIcons.humidity,),
-                    Text(humidity , style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
-                    Text('Humidity', style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
+                    SvgPicture.asset(
+                      AppIcons.humidity,
+                    ),
+                    Text(
+                      humidity,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
+                    Text(
+                      'Humidity',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
                   ],
                 ),
                 Column(
                   children: [
-                    SvgPicture.asset(AppIcons.wind,),
-                    Text(wind , style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
-                    Text('Wind', style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
+                    SvgPicture.asset(
+                      AppIcons.wind,
+                    ),
+                    Text(
+                      wind,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
+                    Text(
+                      'Wind',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
                   ],
                 ),
                 Column(
                   children: [
-                    SvgPicture.asset(AppIcons.rain,),
-                    Text(rain , style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
-                    Text('Rainfall', style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
+                    SvgPicture.asset(
+                      AppIcons.rain,
+                    ),
+                    Text(
+                      rain,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
+                    Text(
+                      'Rainfall',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
                   ],
                 ),
                 Column(
                   children: [
-                    SvgPicture.asset(AppIcons.visibility,),
-                    Text(visibility , style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
-                    Text('Visibility', style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
+                    SvgPicture.asset(
+                      AppIcons.visibility,
+                    ),
+                    Text(
+                      visibility,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
+                    Text(
+                      'Visibility',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
                   ],
                 ),
                 Column(
                   children: [
-                    SvgPicture.asset(AppIcons.temperature,),
-                    Text(feelsLike , style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
-                    Text('Avg Temp', style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12, color: const Color(0xffffffff)),),
+                    SvgPicture.asset(
+                      AppIcons.temperature,
+                    ),
+                    Text(
+                      feelsLike,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
+                    Text(
+                      'Avg Temp',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: const Color(0xffffffff)),
+                    ),
                   ],
                 )
               ],
