@@ -221,6 +221,21 @@ class WeatherView extends StatelessWidget {
 
   const WeatherView({Key? key, required this.currentCity}) : super(key: key);
 
+  String _formatDayWithSuffix(int day) {
+    if (day >= 11 && day <= 13) {
+      return "${day}th";
+    }
+    switch (day % 10) {
+      case 1:
+        return "${day}st";
+      case 2:
+        return "${day}nd";
+      case 3:
+        return "${day}rd";
+      default:
+        return "${day}th";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WeatherBloc, WeatherState>(
@@ -285,6 +300,23 @@ class WeatherView extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Color(0xffD4E7FB),
+                  borderRadius: BorderRadius.all(Radius.circular(5))
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Daily Forecast', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600), ),
+                    Text('View all', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w400), ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               // Refreshable list of hourly or daily forecasts
               SizedBox(
                 height: 130,
@@ -300,14 +332,13 @@ class WeatherView extends StatelessWidget {
                       final hour = state.weatherData.days[index];
 
                       // Parse the datetime string to a DateTime object
-                      final month = DateTime.parse(hour.datetime);
-                      // Format the date as, e.g., 'Nov'
-                      final formattedMonth = DateFormat('MMM').format(month);
-
-                      // Parse the datetime string to a DateTime object
-                      final day = DateTime.parse(hour.datetime);
-                      // Format the date as, e.g., '24'
-                      final formattedDay = DateFormat('d').format(day);
+                      final date = DateTime.parse(hour.datetime);
+                      // Format the month as, e.g., 'Nov'
+                      final formattedMonth = DateFormat('MMM').format(date);
+                      // Get the day as an integer
+                      final dayOfMonth = int.parse(DateFormat('d').format(date));
+                      // Format the day with the correct suffix
+                      final formattedDay = _formatDayWithSuffix(dayOfMonth);
 
                       final temperature = hour.temp.round().toString();
 
