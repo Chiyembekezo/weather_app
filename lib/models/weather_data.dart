@@ -222,5 +222,14 @@ class EnumValues<T> {
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse => map.map((k, v) => MapEntry(v, k));
+  Map<T, String> get reverse {
+    reverseMap = map.map((k, v) => MapEntry(v, k));
+    return reverseMap;
+  }
+
+  String getString(T enumValue) {
+    // Assuming that the reverseMap contains a readable string for each enum value
+    return reverseMap[enumValue] ?? enumValue.toString().split('.').last;
+  }
 }
+

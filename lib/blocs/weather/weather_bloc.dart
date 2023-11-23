@@ -1,9 +1,9 @@
-import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
 import '../../models/weather_data.dart';
 import '../../repositories/weather_repository.dart';
+import 'package:equatable/equatable.dart';
 
 part 'weather_event.dart';
 part 'weather_state.dart';
@@ -16,7 +16,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       emit(WeatherLoadingState());
       try {
         final weatherData = await weatherRepository.fetchHourlyWeather(event.location);
-        emit(WeatherLoadedState(weatherData));
+        print('This Is The City in Bloc: ${event.location}');
+        emit(WeatherLoadedState(weatherData!));
       } catch (error) {
         emit(WeatherErrorState(error.toString()));
       }
