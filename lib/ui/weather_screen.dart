@@ -171,13 +171,25 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     () {}); // Call setState to toggle the clear button when typing.
               },
               onSubmitted: (value) {
-                // Your search logic when the user submits the form.
+                // Trigger the weather fetch for the submitted city
+                if (value.trim().isNotEmpty) {
+                  setState(() {
+                    _currentCity = value.trim();
+                  });
+                  context.read<WeatherBloc>().add(FetchWeather(_currentCity));
+                }
               },
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-            WeatherView(currentCity: _currentCity),
+            Expanded(
+              child: ListView(
+                children: [
+                  WeatherView(currentCity: _currentCity)
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -236,6 +248,7 @@ class WeatherView extends StatelessWidget {
         return "${day}th";
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WeatherBloc, WeatherState>(
@@ -301,16 +314,24 @@ class WeatherView extends StatelessWidget {
                 height: 20,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Color(0xffD4E7FB),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-                ),
+                    color: Color(0xffD4E7FB),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Daily Forecast', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600), ),
-                    Text('View all', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w400), ),
+                    Text(
+                      'Daily Forecast',
+                      style: GoogleFonts.poppins(
+                          fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      'View all',
+                      style: GoogleFonts.poppins(
+                          fontSize: 12, fontWeight: FontWeight.w400),
+                    ),
                   ],
                 ),
               ),
@@ -329,31 +350,38 @@ class WeatherView extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: state.weatherData.days.length,
                     itemBuilder: (context, index) {
-                      final hour = state.weatherData.days[index];
+                      final days = state.weatherData.days[index];
+                      String dayConditions = days.conditions != null
+                          ? conditionsValues.reverse[days.conditions]!
+                          : ' Not available';
 
                       // Parse the datetime string to a DateTime object
-                      final date = DateTime.parse(hour.datetime);
+                      final date = DateTime.parse(days.datetime);
                       // Format the month as, e.g., 'Nov'
                       final formattedMonth = DateFormat('MMM').format(date);
                       // Get the day as an integer
-                      final dayOfMonth = int.parse(DateFormat('d').format(date));
+                      final dayOfMonth =
+                          int.parse(DateFormat('d').format(date));
                       // Format the day with the correct suffix
                       final formattedDay = _formatDayWithSuffix(dayOfMonth);
 
-                      final temperature = hour.temp.round().toString();
+                      final temperature = days.temp.round().toString();
 
                       String svgIcon = '';
 
-                      if (conditionsString == 'Partially cloudy') {
+                      if (dayConditions == 'Partially cloudy') {
                         svgIcon = 'assets/Weather-Partially-Cloudy-Day.svg';
-                      } else if (conditionsString == 'Clear') {
+                      } else if (dayConditions == 'Clear') {
                         svgIcon = 'assets/Weather-Clear-Day.svg';
-                      } else if (conditionsString == 'Overcast') {
+                      } else if (dayConditions == 'Overcast') {
                         svgIcon = 'assets/Weather-Cloudy.svg';
-                      } else if (conditionsString == 'Rain') {
+                      } else if (dayConditions == 'Rain') {
                         svgIcon = 'assets/Weather-Raining-Day.svg';
+                      } else if (dayConditions == 'Rain, Partially cloudy') {
+                        svgIcon = 'assets/Weather-Thunder-rain.svg';
                       } else {
-                        svgIcon = 'assets/images/Sunny.svg'; // Default image
+                        svgIcon =
+                            'assets/Weather-Thunder-rain.svg'; // Default image
                       }
                       return Container(
                         padding: const EdgeInsets.all(10),
