@@ -184,10 +184,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
               height: 10,
             ),
             Expanded(
-              child: ListView(
-                children: [
-                  WeatherView(currentCity: _currentCity)
-                ],
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  context.read<WeatherBloc>().add(FetchWeather(_currentCity));
+                },
+                child: ListView(
+                  children: [WeatherView(currentCity: _currentCity)],
+                ),
               ),
             ),
           ],
@@ -291,8 +294,32 @@ class WeatherView extends StatelessWidget {
             svgImagePath = isNightTime
                 ? 'assets/Weather-Raining-Night.svg'
                 : 'assets/Weather-Raining-Day.svg';
+          } else if (conditionsString == 'Rain, Partially cloudy') {
+            svgImagePath = isNightTime
+                ? 'assets/Weather-Raining-Night.svg'
+                : 'assets/Weather-Raining-Day.svg';
+          } else if (conditionsString == 'Rain, Overcast') {
+            svgImagePath = isNightTime
+                ? 'assets/Weather-Raining-Night.svg'
+                : 'assets/Weather-Raining-Day.svg';
+          } else if (conditionsString == 'Snow, Partially cloudy') {
+            svgImagePath = isNightTime
+                ? 'assets/Weather-Raining-Night.svg'
+                : 'assets/Weather-Raining-Day.svg';
+          } else if (conditionsString == 'Snow') {
+            svgImagePath = isNightTime
+                ? 'assets/Weather-Snow-Night.svg'
+                : 'assets/Weather-Snow-Day.svg';
+          } else if (conditionsString == 'Snow, Overcast') {
+            svgImagePath = isNightTime
+                ? 'assets/Weather-Snow-Night.svg'
+                : 'assets/Weather-Snow-Day.svg';
+          } else if (conditionsString == 'Snow, Partially cloudy') {
+            svgImagePath = isNightTime
+                ? 'assets/Weather-Snow-Night.svg'
+                : 'assets/Weather-Snow-Day.svg';
           } else {
-            svgImagePath = 'assets/images/Sunny.svg'; // Default image
+            svgImagePath = 'assets/images/Weather-Cloudy.svg'; // Default image
           }
           final currentTemp = currentWeather.temp.round().toString();
 
@@ -316,9 +343,10 @@ class WeatherView extends StatelessWidget {
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                decoration: BoxDecoration(
-                    color: Color(0xffD4E7FB),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                decoration: const BoxDecoration(
+                  color: Color(0xffD4E7FB),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -379,6 +407,14 @@ class WeatherView extends StatelessWidget {
                         svgIcon = 'assets/Weather-Raining-Day.svg';
                       } else if (dayConditions == 'Rain, Partially cloudy') {
                         svgIcon = 'assets/Weather-Thunder-rain.svg';
+                      } else if (dayConditions == 'Rain, Overcast') {
+                        svgIcon = 'assets/Weather-Thunder-rain.svg';
+                      } else if (dayConditions == 'Snow') {
+                        svgIcon = 'assets/Weather-Snow.svg';
+                      } else if (dayConditions == 'Snow, Partially cloudy') {
+                        svgIcon = 'assets/Weather-Snow.svg';
+                      } else if (dayConditions == 'Snow, Overcast') {
+                        svgIcon = 'assets/Weather-Snow.svg';
                       } else {
                         svgIcon =
                             'assets/Weather-Thunder-rain.svg'; // Default image
