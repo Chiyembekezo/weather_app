@@ -18,6 +18,10 @@ class AppIcons {
   static const thunder = 'assets/Weather-Thunder.svg';
   static const thunderRain = 'assets/Weather-Thunder-rain.svg';
 
+  static const overcast = 'assets/Weather-Overcast.svg';
+  static const overcastRain = 'assets/Weather-Rain-Overcast.svg';
+  static const overcastSnow = 'assets/Weather-Snow-Overcast.svg';
+
   static const humidity = 'assets/humidity.svg';
   static const rain = 'assets/rain.svg';
   static const wind = 'assets/wind.svg';
