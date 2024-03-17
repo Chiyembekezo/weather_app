@@ -140,7 +140,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
               controller: _cityController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: 'Enter a city',
+                hintText: 'Enter a city name',
                 // 'hintText' is used instead of 'labelText' for placeholder text.
                 filled: true,
                 // Fills the background color of the TextField.
